@@ -1,0 +1,43 @@
+# Simple workflow for deploying static content to GitHub Pages# 部署静态内容到 GitHub Pages 的简单工作流程# 部署静态内容到 GitHub Pages 的简单工作流程
+name   名字名称：将静态内容部署到 Pages: Deploy static content to Pages名称：将静态内容部署到 Pages
+
+on   在   ::
+  # 在针对默认分支的推送操作上运行# Runs on pushes targeting the default branch# 在针对默认分支的推送操作上运行
+  push   推   推动::
+    branches   分支机构   分支机构(“main"):: ["main"   “主要”]
+
+  允许您从“操作”选项卡手动运行此工作流。# Allows you to run this workflow manually from the Actions tab允许您从“操作”选项卡手动运行此工作流。
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages# 将 GITHUB_TOKEN 的权限设置为允许部署到 GitHub Pages# 将 GITHUB_TOKEN 的权限设置为允许部署到 GitHub Pages
+permissions   权限   权限::
+  contents   内容   内容:读: read   内容:读
+  pages   页面   页:写: write   页:写
+  id-token   id-token:写: write   id-token:写
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.仅允许一次并发部署，跳过在运行中的运行和最新排队运行之间的排队运行。仅允许一次并发部署，跳过在运行中的运行和最新排队运行之间的排队运行。
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.不过，请勿取消正在进行的运行操作，因为我们希望让这些生产部署顺利完成。不过，请勿取消正在进行的运行操作，因为我们希望让这些生产部署顺利完成。
+concurrency   并发性   并发性::
+  group   集团   group: "pages"   “页面”: "pages"   “页面”
+  cancel-in-progress取消中：否: false   假
+
+jobs   工作   工作::
+  # 由于我们只是部署，所以只有一个部署任务# Single deploy job since we're just deploying# 由于我们只是部署，所以只有一个部署任务
+  deploy   部署   部署::
+    environment   环境   环境::
+      name   名字   名称:github-pages: github-pages   名称:github-pages
+      url网址：${{ steps.deployment.outputs.page_url }}: ${{ steps.deployment.outputs.page_url }}网址：${{ steps.deployment.outputs.page_url }}
+    runs-on   运行在   运行于：ubuntu-latest: ubuntu-latest   运行于：ubuntu-latest
+    steps   步骤   步骤::
+      -    -名称：Checkoutname: Checkout   -名称：Checkout
+        uses使用：actions/checkout@v4   使用: actions/checkout@v4使用：actions/checkout@v4
+      -    —name：设置页面name: Setup Pages   —name：设置页面
+        uses使用：actions/configure-pages@v5   使用: actions/configure-pages@v5使用：actions/configure-pages@v5
+      -    - 名称：上传工件name   名字: Upload artifact   - 名称：上传工件
+        uses   使用: actions/upload-pages-artifact@v3
+        with   :   与:
+          # Upload entire repository# 上传整个代码库
+          path   路径:“。”   路径: '.'
+      - name   名字: Deploy to GitHub Pages
+        id   id:部署: deployment
+        uses   使用: actions/deploy-pages@v4
